@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <input id="input" type="text">
+        <button class="" id="submit">Submit</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let submitBtn = document.getElementById('submit');
+        let inputArea = document.getElementById('input');
+        let resultArea = document.getElementById('results');
+
+        inputArea.addEventListener('keyup', e => {
+            if (e.keyCode == 13) {
+               getZips();
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {                 
+            getZips();                    
+        });
+
+        function getZips() {
+            resultArea.innerHTML = ''; 
+            let city = inputArea.value; 
+            if (city.length == 0) return;           
+             fetch('http://localhost:8000/zips/city/' + city)
+                .then(response => {
+                    return response.text();
+                })
+                .then(data => {                        
+                    render(data, city);
+                });
+            inputArea.value = '';  
+        }
+
+        function render(data, city) {
+            resultArea.innerHTML += '<h1>Zip codes for ' + city + '</h1>'
+            data = JSON.parse(data);
+            console.log(data);
+            data.forEach(zipData => {
+                resultArea.innerHTML += '<p>' + zipData.zip + '</p>'
+            });
+        }
+        
+    </script>
+</body>
+</html>
