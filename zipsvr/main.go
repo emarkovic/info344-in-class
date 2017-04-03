@@ -56,7 +56,8 @@ func main() {
 		log.Fatal("please set addr env var")
 	}
 
-	f, err := os.Open("../data/zips.json")
+	// f, err := os.Open("../data/zips.json")
+	f, err := os.Open("zips.json")
 	if err != nil {
 		log.Fatal("Error opening zips file: " + err.Error())
 	}

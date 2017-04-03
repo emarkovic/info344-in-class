@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Site</title>
+</head>
+<body>
+    <h1>Welcome to my site</h1>
+    <p> Hello info 344 </p>
+    <p> Another paragraph </p>
+</body>
+</html>
+
+<!--
+Tell docker nginx to server this file:
+$ docker run -d -p 80:80 \ 
+    -v $(pwd):/usr/share/nginx/html:ro \ 
+    nginx
+
+^^ docker needs to know an absolute path, that is why we are using pwd
+':' means mapping
+":ro" means read only, inside the container it is only allowed to read those files and NOT modify, this protects from hackers
+-->
