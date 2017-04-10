@@ -7,8 +7,10 @@
 </head>
 <body>
     <div class="container">
-        <input id="input" type="text">
-        <button class="" id="submit">Submit</button>
+        <h1>Enter a city</h1>
+        <input class="form-control" id="input" type="text">
+        <br>
+        <button class="btn btn-default" id="submit">Submit</button>
         <div id="results"></div>
     </div>
 
@@ -31,7 +33,7 @@
             resultArea.innerHTML = ''; 
             let city = inputArea.value; 
             if (city.length == 0) return;           
-             fetch('http://localhost:8000/zips/city/' + city)
+             fetch('http://138.68.253.107/zips/city/' + city)
                 .then(response => {
                     return response.text();
                 })
