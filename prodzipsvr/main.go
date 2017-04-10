@@ -12,7 +12,8 @@ import (
 	"strings"
 )
 
-const defaultPort = "80"
+// 443 is the standard port number for https
+const defaultPort = "443"
 
 const (
 	headerContentType              = "Content-Type"
@@ -123,6 +124,8 @@ func main() {
 		port = defaultPort
 	}
 	addr := fmt.Sprintf("%s:%s", host, port)
+	certPath := os.Getenv("CERTPATH")
+	keyPath := os.Getenv("KEYPATH")
 
 	zips, err := loadZipsFromCSV("zips.csv")
 
@@ -146,5 +149,29 @@ func main() {
 
 	fmt.Printf("server is listening at %s...\n", addr)
 
-	log.Fatal(http.ListenAndServe(addr, nil))
+	log.Fatal(http.ListenAndServeTLS(addr, certPath, keyPath, nil))
 }
+
+/*
+Instructions from slide 13
+- go to in class coding repo
+- cd into prodzipsvr
+- $ mkdir tls
+- $ cd tls
+- if on windows, use git bash. git bash should have 'openssl', if not, download it and then:
+- $ openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 \
+  subj "/CN=localhost" -keyout privkey.pem -out fullchain.pem
+- you should now have fullchain.pem and privkey.pem in tls
+- add tls directory to .gitignore!!!!!!!!
+- now in main.go change default port to 443
+- change some other stuff too... look at line 127 & 128 of this file and line 152
+- now follow these commands while inside prodzipsvr directory:
+
+// set to 4430 b/c regular users can get to 443
+$ export PORT=4430
+$ export CERTPATH=./tls/fullchain.pem
+$ export KEYPATH=./tls/privkey.pem
+$ go install && prodzipsvr
+
+visit https://localhost:4430/
+*/
