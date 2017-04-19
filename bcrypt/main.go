@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const usage = `
@@ -21,4 +24,32 @@ func main() {
 		os.Exit(1)
 	}
 
+	cmd := os.Args[1]
+	password := []byte(os.Args[2])
+
+	switch cmd {
+	case "hash":
+		cost, err := strconv.Atoi(os.Args[3])
+		if err != nil {
+			fmt.Println("cost must be an integer")
+			os.Exit(1)
+		}
+		passhash, err := bcrypt.GenerateFromPassword(password, cost)
+		if err != nil {
+			fmt.Printf("error hashing password: %v", err)
+			os.Exit(1)
+		}
+		fmt.Println(string(passhash))
+	case "verify":
+		passhash := []byte(os.Args[3])
+		err := bcrypt.CompareHashAndPassword(passhash, password)
+		if err != nil {
+			fmt.Println("Invalid password")
+		} else {
+			fmt.Println("Valid password")
+		}
+	}
 }
+
+// fetch from the database... and even if you dont find the account, still run the the bcrypt hash so that tey cant do a timed attack
+// keep track of number of failed sign in attemptes - write to redis abt how many times they failed to sign in - set expire to like 10 min

@@ -167,7 +167,7 @@ Instructions from slide 13
 - change some other stuff too... look at line 127 & 128 of this file and line 152
 - now follow these commands while inside prodzipsvr directory:
 
-// set to 4430 b/c regular users can get to 443
+// set to 4430 b/c regular users cant get to 443
 $ export PORT=4430
 $ export CERTPATH=./tls/fullchain.pem
 $ export KEYPATH=./tls/privkey.pem
