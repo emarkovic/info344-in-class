@@ -17,7 +17,7 @@ type Task struct {
 	Tags       []string    `json:"tags"`
 	CreatedAt  time.Time   `json:"createdAt"`
 	ModifiedAt time.Time   `json:"modifiedAt"`
-	complete   bool        `josn:"complete"`
+	Complete   bool        `josn:"complete"`
 }
 
 //Validate will validate the NewTask

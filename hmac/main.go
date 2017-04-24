@@ -31,13 +31,14 @@ func main() {
 		h.Write(v)
 		// computes dig sig for all data in hmac so far
 		sig := h.Sum(nil)
+		fmt.Println(len(sig))
 
 		//combine original data and the signature - then base64 hash it
 		buf := make([]byte, len(v)+len(sig))
 		copy(buf, v)
 		// copy the signature byte into the last part of the buffer (the part after v)
 		copy(buf[len(v):], sig)
-		fmt.Println(base64.URLEncoding.EncodeToString(buf))
+		// fmt.Println(base64.URLEncoding.EncodeToString(buf))
 	case "verify":
 		// first thing is to decode it
 		buf, err := base64.URLEncoding.DecodeString(value)
