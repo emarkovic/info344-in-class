@@ -3,6 +3,8 @@ package tasks
 import (
 	"time"
 
+	"fmt"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -22,9 +24,12 @@ func (ms *MongoStore) Insert(newTask *NewTask) (*Task, error) {
 }
 
 func (ms *MongoStore) Get(ID interface{}) (*Task, error) {
+	fmt.Println(ID)
 	if sID, ok := ID.(string); ok {
+		fmt.Println(bson.ObjectIdHex(sID))
 		ID = bson.ObjectIdHex(sID)
 	}
+	fmt.Println(ID)
 	task := &Task{}
 	err := ms.Session.DB(ms.DatabaseName).C(ms.CollectionName).FindId(ID).One(task)
 	return task, err

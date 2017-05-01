@@ -3,8 +3,6 @@ package tasks
 import (
 	"testing"
 
-	"fmt"
-
 	mgo "gopkg.in/mgo.v2"
 )
 
@@ -30,7 +28,6 @@ func TestCRUD(t *testing.T) {
 	if err != nil {
 		t.Errorf("error inserting new task: %v", err)
 	}
-	fmt.Println(task.ID)
 
 	task2, err := store.Get(task.ID)
 	if err != nil {
@@ -40,5 +37,5 @@ func TestCRUD(t *testing.T) {
 		t.Errorf("task title didnt match, expected %s but got %s", task.Title, task2.Title)
 	}
 
-	sess.DB(store.DatabaseName).C(store.CollectionName).RemoveAll(nil)
+	// sess.DB(store.DatabaseName).C(store.CollectionName).RemoveAll(nil)
 }

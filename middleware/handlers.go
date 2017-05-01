@@ -7,6 +7,8 @@ const contentTypeText = "text/plain"
 
 //HelloHandler1 says hello from handler 1
 func HelloHandler1(w http.ResponseWriter, r *http.Request) {
+	// option 1 from slides
+	// logReq(r)
 	w.Header().Add(headerContentType, contentTypeText)
 	w.Write([]byte("Hello from Handler 1"))
 }

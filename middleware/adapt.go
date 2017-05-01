@@ -18,3 +18,10 @@ type Adapter func(http.Handler) http.Handler
 //reverse order, passing the `handler` to
 //each, and resetting `handler` to the
 //handler returned from the Adapter func
+func Adapt(handler http.Handler, adapters ...Adapter) http.Handler {
+	// work with adapters as a slice
+	for idx := len(adapters) - 1; idx >= 0; idx-- {
+		handler = adapters[idx](handler)
+	}
+	return handler
+}
