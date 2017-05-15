@@ -19,7 +19,7 @@
 		var eventsDiv = document.querySelector("#events")
 		
 		//use `wss://` for servers that support TLS
-		var websock = new WebSocket("ws://localhost:4000/v1/ws")
+		var websock = new WebSocket("ws://localhost:9000/v1/ws")
 		websock.addEventListener("message", function(wsevent) {
 			var event = JSON.parse(wsevent.data);
 			var p = document.createElement("p");
@@ -32,7 +32,7 @@
 				fetchOpts = {
 					method: "POST"
 				}
-				fetch("http://localhost:4000/v1/trigger", fetchOpts)
+				fetch("http://localhost:9000/v1/trigger", fetchOpts)
 					.catch(function(err) {
 						alert(err.message || err);
 					});
