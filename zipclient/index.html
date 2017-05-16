@@ -33,7 +33,9 @@
             resultArea.innerHTML = ''; 
             let city = inputArea.value; 
             if (city.length == 0) return;           
-             fetch('http://138.68.253.107/zips/city/' + city)
+            //  fetch('http://138.68.253.107/zips/city/' + city)
+            // fetch from node
+            fetch('http://localhost/zips/city/' + city)
                 .then(response => {
                     return response.text();
                 })
