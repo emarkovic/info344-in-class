@@ -18,7 +18,7 @@ class MongoStore {
      * getAll returns all tasks in the store
      */
     getAll() {
-        //TODO: implement this
+        return this.collection.find().toArray()
     }
 
     /**
@@ -26,7 +26,7 @@ class MongoStore {
      * @param {Task} task 
      */
     insert(task) {
-        //TODO: implement this
+        return this.collection.insert(task)
     }
 
     /**
@@ -35,7 +35,14 @@ class MongoStore {
      * @param {bool} complete 
      */
     async setComplete(id, complete) {
-        //TODO: implement this
+        // when we update doc in mongo, it will return the original version 
+        // of the doc instead of the updated one... weird... this obj fixes it
+        let options = {returnOriginal: false}
+        let updates = {$set: {complete: complete}}
+        let oid = new mongodb.ObjectID(id)
+        let result = await this.collection.findOneAndUpdate({_id: oid}, updates, options)
+        // if there is an error, this method will throw an exception
+        return result.value
     }
 
     /**
@@ -43,7 +50,7 @@ class MongoStore {
      * @param {string} id 
      */
     delete(id) {
-        //TODO: implement this
+        return this.collection.deleteOne({_id: new mongodb.ObjectID(id)})
     }
 }
 
