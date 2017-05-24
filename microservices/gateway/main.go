@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"strings"
 )
 
 const defaultPort = "443"
@@ -42,8 +44,25 @@ func getUser(r *http.Request) *User {
 //getServiceProxy returns a ReverseProxy for a microservice
 //given the services address (host:port)
 func getServiceProxy(svcAddr string) *httputil.ReverseProxy {
-	//TODO: implement this
-	return nil
+	svcAddrs := strings.Split(svcAddr, ",")
+	curAddr := 0
+	// math.rand to split up the stuff
+	// or use rand robin - declare var at higher scope and use it to iterate from index 0 to index 1
+	return &httputil.ReverseProxy{
+		Director: func(r *http.Request) {
+			user := getUser(r)
+
+			//reset the scheme and host of
+			//the request url
+			r.URL.Scheme = "http"
+			r.URL.Host = svcAddrs[curAddr]
+			curAddr = (curAddr + 1) % len(svcAddrs)
+
+			//serialize the current user into json
+			j, _ := json.Marshal(user)
+			r.Header.Add("X-User", string(j))
+		},
+	}
 }
 
 func main() {
@@ -53,8 +72,12 @@ func main() {
 	certpath := def(os.Getenv("CERTPATH"), "./tls/fullchain.pem")
 	keypath := def(os.Getenv("KEYPATH"), "./tls/privkey.pem")
 
-	//TODO: get the hello service's address
-	//and add a ReverseProxy handler for it
+	//using the reverse proxy
+	helloSvcAddr := os.Getenv("HELLOSVCADDR")
+	if len(helloSvcAddr) == 0 {
+		log.Fatal("you must supply a value for HELLOSVCADDR")
+	}
+	http.Handle("/hello", getServiceProxy(helloSvcAddr))
 
 	fmt.Printf("gateway is listening at https://%s...\n", addr)
 	log.Fatal(http.ListenAndServeTLS(addr, certpath, keypath, nil))
